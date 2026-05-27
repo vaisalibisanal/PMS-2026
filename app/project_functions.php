@@ -9,14 +9,15 @@
  * @param int $offset The offset for pagination.
  * @param string $projectNameFilter Optional filter for project name.
  * @param int|null $createdByFilter Optional filter for created by user ID.
+ * @param int|null $statusFilter Optional filter for project status.
  * @return array An array of project rows.
  */
-function get_projects_paginated(mysqli $conn, int $pageSize, int $offset, string $projectNameFilter = '', ?int $createdByFilter = null): array
+function get_projects_paginated(mysqli $conn, int $pageSize, int $offset, string $projectNameFilter = '', ?int $createdByFilter = null, ?int $statusFilter = null): array
 {
     $sql = "SELECT p.id, p.project_name, p.project_code, p.created_on, p.status, u.name as created_by_name
             FROM projects p
             LEFT JOIN users u ON p.created_by = u.id
-            WHERE p.status = 0"; // Only active projects
+            WHERE 1=1";
 
     $params = [];
     $types = "";
@@ -30,6 +31,12 @@ function get_projects_paginated(mysqli $conn, int $pageSize, int $offset, string
     if ($createdByFilter !== null) {
         $sql .= " AND p.created_by = ?";
         $params[] = $createdByFilter;
+        $types .= "i";
+    }
+
+    if ($statusFilter !== null) {
+        $sql .= " AND p.status = ?";
+        $params[] = $statusFilter;
         $types .= "i";
     }
 
@@ -62,11 +69,12 @@ function get_projects_paginated(mysqli $conn, int $pageSize, int $offset, string
  * @param mysqli $conn The database connection object.
  * @param string $projectNameFilter Optional filter for project name.
  * @param int|null $createdByFilter Optional filter for created by user ID.
+ * @param int|null $statusFilter Optional filter for project status.
  * @return int The total number of active projects.
  */
-function get_project_count(mysqli $conn, string $projectNameFilter = '', ?int $createdByFilter = null): int
+function get_project_count(mysqli $conn, string $projectNameFilter = '', ?int $createdByFilter = null, ?int $statusFilter = null): int
 {
-    $sql = "SELECT COUNT(id) AS total FROM projects WHERE status = 0"; // Only active projects
+    $sql = "SELECT COUNT(id) AS total FROM projects WHERE 1=1";
 
     $params = [];
     $types = "";
@@ -80,6 +88,12 @@ function get_project_count(mysqli $conn, string $projectNameFilter = '', ?int $c
     if ($createdByFilter !== null) {
         $sql .= " AND created_by = ?";
         $params[] = $createdByFilter;
+        $types .= "i";
+    }
+
+    if ($statusFilter !== null) {
+        $sql .= " AND status = ?";
+        $params[] = $statusFilter;
         $types .= "i";
     }
 

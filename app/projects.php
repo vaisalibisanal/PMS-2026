@@ -51,10 +51,11 @@ $offset = ($page - 1) * $pageSize;
 // Filter parameters
 $projectNameFilter = htmlspecialchars($_GET['project_name'] ?? '');
 $createdByFilter = isset($_GET['created_by']) && is_numeric($_GET['created_by']) ? intval($_GET['created_by']) : null;
+$statusFilter = isset($_GET['status']) ? ($_GET['status'] !== '' ? intval($_GET['status']) : null) : 0; // Defaults to 0 (Active)
 
 // Fetch projects and total count with filters
-$projects = get_projects_paginated($conn, $pageSize, $offset, $projectNameFilter, $createdByFilter);
-$totalProjects = get_project_count($conn, $projectNameFilter, $createdByFilter);
+$projects = get_projects_paginated($conn, $pageSize, $offset, $projectNameFilter, $createdByFilter, $statusFilter);
+$totalProjects = get_project_count($conn, $projectNameFilter, $createdByFilter, $statusFilter);
 
 // Calculate total pages
 $totalPages = ($totalProjects > 0) ? intval(ceil($totalProjects / $pageSize)) : 1;
@@ -145,11 +146,11 @@ $allUsers = get_all_users($conn);
             <!-- Filters -->
             <div class="card card-spot mb-4 p-3">
                 <form method="GET" action="projects.php" class="row g-3 align-items-end">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="projectNameFilter" class="form-label">Project Name</label>
                         <input type="text" class="form-control" id="projectNameFilter" name="project_name" value="<?= htmlspecialchars($projectNameFilter) ?>" placeholder="Filter by project name">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="createdByFilter" class="form-label">Created By</label>
                         <select class="form-select" id="createdByFilter" name="created_by">
                             <option value="">All Users</option>
@@ -160,7 +161,15 @@ $allUsers = get_all_users($conn);
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="col-md-4 d-flex justify-content-end">
+                    <div class="col-md-3">
+                        <label for="statusFilter" class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter" name="status">
+                            <option value="">All Statuses</option>
+                            <option value="0" <?= ($statusFilter === 0) ? 'selected' : '' ?>>Active</option>
+                            <option value="1" <?= ($statusFilter === 1) ? 'selected' : '' ?>>Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex justify-content-end">
                         <button type="submit" class="btn btn-info me-2">Apply Filters</button>
                         <a href="projects.php" class="btn btn-secondary">Clear Filters</a>
                     </div>
