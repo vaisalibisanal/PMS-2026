@@ -1,8 +1,9 @@
-    <?php
+<?php
 // dashboard.php - protected page visible only to logged-in users
 // Include DB connection and helpers from the mysql folder
+session_start();
 require_once './../mysql/connection.php'; // central DB connection and helpers
-require_once './../mysql/mysql_helper.php'; // helper to load a user by id
+require_once './../mysql/mysql_helper.php'; // elper to load a user by id
 require_once './../constants/constants.php'; // Include project constants
 
         // Ensure user is logged in, attempt cookie-based restore if available
@@ -27,7 +28,7 @@ require_once './../constants/constants.php'; // Include project constants
 
         // Safe user values for display
         $userName = htmlspecialchars($_SESSION['user_name'] ?? 'User'); 
-        $userEmail = htmlspecialchars($_SESSION['user_email'] ?? ''); 
+        $userEmail = htmlspecialchars($_SESSION['user_e'] ?? ''); 
 
         // Fetch total users (simple, efficient query)
         // Get total users via helper
@@ -82,6 +83,9 @@ require_once './../constants/constants.php'; // Include project constants
                                 <li class="nav-item me-3 d-none d-lg-block">
                                     <span class="text-muted small">Signed in as</span>
                                     <div class="d-inline-block ms-2"> <span class="top-avatar"><?php echo strtoupper(substr($userName,0,1)); ?></span> <span class="ms-2 fw-semibold"><?php echo $userName; ?></span></div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="projects.php">Projects</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="btn btn-outline-danger" href="./../app/logout.php">🚪 Logout</a>
@@ -142,16 +146,18 @@ require_once './../constants/constants.php'; // Include project constants
                                                 <th>#</th>
                                                 <th>Name</th>
                                                 <th>Email</th>
+                                                <th>Phone</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php if (empty($users)) : ?>
-                                                <tr><td colspan="3" class="text-muted">No users yet</td></tr>
+                                                <tr><td colspan="4" class="text-muted">No users yet</td></tr>
                                             <?php else: foreach ($users as $u): ?>
                                                 <tr>
                                                     <td><?php echo htmlspecialchars($u['id']); ?></td>
                                                     <td><?php echo htmlspecialchars($u['name']); ?></td>
                                                     <td><?php echo htmlspecialchars($u['email']); ?></td>
+                                                    <td><?php echo htmlspecialchars($u['phone'] ?? ''); ?></td>
                                                 </tr>
                                             <?php endforeach; endif; ?>
                                         </tbody>

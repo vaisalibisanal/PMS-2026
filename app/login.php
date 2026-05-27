@@ -1,6 +1,6 @@
 <?php
 // login.php - shows login form on GET and authenticates on POST
-
+session_start(); // Start session to manage user login state
 require_once './../config.php'; // Include DB connection and helpers
 require_once './../mysql/connection.php'; // Include DB connection and helpers
 

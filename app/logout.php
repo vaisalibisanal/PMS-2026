@@ -1,6 +1,6 @@
 <?php
 // logout.php - destroys session and clears cookies to log out a user
-
+session_start(); // Start session to access session variables
 require_once './../config.php'; // Include config
 
 // Unset all of the session variables.

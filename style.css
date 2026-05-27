@@ -388,3 +388,23 @@ body.dashboard-page main.container {
 body.dashboard-page .card-spot {
     min-height: 142px;
 }
+
+/* Responsive table improvements */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    white-space: nowrap; /* keep phone numbers intact */
+}
+
+@media (max-width: 576px) {
+    .table {
+        font-size: 13px;
+    }
+    .table th, .table td {
+        padding: 8px 10px;
+    }
+}

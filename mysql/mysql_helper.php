@@ -3,7 +3,7 @@
 function get_user_by_id($conn, $id)
 {
     $id = intval($id);
-    if ($stmt = $conn->prepare('SELECT id, name, email FROM users WHERE id = ?')) {
+    if ($stmt = $conn->prepare('SELECT id, name, email, phone FROM users WHERE id = ?')) {
         $stmt->bind_param('i', $id);
         $stmt->execute();
         $res = $stmt->get_result();
@@ -33,7 +33,7 @@ function get_users_page($conn, $limit, $offset)
     $limit = intval($limit);
     $offset = intval($offset);
     $users = [];
-    if ($stmt = $conn->prepare('SELECT id, name, email FROM users ORDER BY id ASC LIMIT ? OFFSET ?')) {
+    if ($stmt = $conn->prepare('SELECT id, name, email, phone FROM users ORDER BY id ASC LIMIT ? OFFSET ?')) {
         $stmt->bind_param('ii', $limit, $offset);
         $stmt->execute();
         $res = $stmt->get_result();

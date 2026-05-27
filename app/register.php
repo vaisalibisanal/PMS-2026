@@ -5,8 +5,7 @@ require_once './../mysql/connection.php'; // Include database connection and hel
 require_once './../config.php'; // Include config
 
 
-// Initialize variables for form values and errors
-$name = $email = $password = $confirm_password = '';
+$name = $email = $password = $confirm_password = $phone = '';
 $errors = [];
 
 // If form submitted via POST, process registration
@@ -16,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = clean_input($_POST['email'] ?? ''); // Clean and assign email
     $password = $_POST['password'] ?? ''; // Passwords are not escaped here
     $confirm_password = $_POST['confirm_password'] ?? ''; // Confirmation
+    $phone = clean_input($_POST['phone'] ?? ''); // Phone number
 
     // Validate required fields
     if (empty($name)) {
@@ -23,6 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'Valid email is required.';
+    }
+    if (empty($phone)) {
+        $errors[] = 'Phone number is required.';
+    } elseif (!preg_match('/^[0-9+\-()\s]{6,20}$/', $phone)) {
+        $errors[] = 'Enter a valid phone number.';
     }
     if (empty($password) || strlen($password) < 6) {
         $errors[] = 'Password required (min 6 chars).';
@@ -44,9 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Hash the password securely
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            // Prepared statement to insert new user safely using MySQLi
-            $insert = $conn->prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
-            $insert->bind_param('sss', $name, $email, $password_hash);
+            // Prepared statement to insert new user safely using MySQLi (includes phone)
+            $insert = $conn->prepare('INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)');
+            $insert->bind_param('ssss', $name, $email, $phone, $password_hash);
             
             if ($insert->execute()) {
                 // Get new user id
@@ -105,6 +110,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" name="email" id="email" value="<?php echo htmlspecialchars($email); ?>" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" name="phone" id="phone" value="<?php echo htmlspecialchars($phone); ?>" placeholder="Enter your phone number" required>
             </div>
 
             <div class="form-group">
