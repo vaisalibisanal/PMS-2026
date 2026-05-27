@@ -29,3 +29,4 @@ See `database.sql` to create the database and `users` table.
 ## Notes:
 All PHP files include inline beginner-friendly comments explaining every line.
 Built-in security features: prepared statements, password hashing, input validation, HttpOnly cookies.
+This is very light weight web application.
