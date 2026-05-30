@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user_id = $conn->insert_id;
 
                 // Set session to log in the user
-                $_SESSION['user_id'] = $user_id; // Store user id in session
+                //$_SESSION['user_id'] = $user_id; // Store user id in session
                 $_SESSION['user_name'] = $name; // Store user name in session
 
                 // Set a cookie as an example (remember me style) for 1 hour

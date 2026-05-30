@@ -255,4 +255,5 @@ $allUsers = get_all_users($conn);
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </body>
+    <p style="margin: 8px 0 0 0; font-size: 13px; color: rgba(255,255,255,0.8);">Your session is secure and active</p>
 </html>
