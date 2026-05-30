@@ -104,6 +104,9 @@ $userName = htmlspecialchars($_SESSION['user_name'] ?? 'User');
                             <a class="nav-link active" aria-current="page" href="projects.php">Projects</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="pms_listing.php">PMS</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="btn btn-outline-danger" href="./../app/logout.php">🚪 Logout</a>
                         </li>
                     </ul>
